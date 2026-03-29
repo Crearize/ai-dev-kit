@@ -1,0 +1,76 @@
+name: Sync Superpowers Skills
+
+on:
+  schedule:
+    - cron: '0 9 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Get current synced version
+        id: current
+        run: |
+          if [ -f .superpowers-version ]; then
+            echo "version=$(cat .superpowers-version)" >> "$GITHUB_OUTPUT"
+          else
+            echo "version=0.0.0" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Get latest superpowers release
+        id: latest
+        run: |
+          LATEST=$(gh api repos/obra/superpowers/releases/latest --jq '.tag_name' | sed 's/^v//')
+          echo "version=$LATEST" >> "$GITHUB_OUTPUT"
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Check if update needed
+        id: check
+        run: |
+          if [ "${{ steps.current.outputs.version }}" = "${{ steps.latest.outputs.version }}" ]; then
+            echo "needed=false" >> "$GITHUB_OUTPUT"
+            echo "Already up to date: v${{ steps.current.outputs.version }}"
+          else
+            echo "needed=true" >> "$GITHUB_OUTPUT"
+            echo "Update available: v${{ steps.current.outputs.version }} → v${{ steps.latest.outputs.version }}"
+          fi
+
+      - name: Clone superpowers
+        if: steps.check.outputs.needed == 'true'
+        run: |
+          git clone --depth 1 --branch "v${{ steps.latest.outputs.version }}" \
+            https://github.com/obra/superpowers.git /tmp/superpowers
+
+      - name: Transform and copy skills
+        if: steps.check.outputs.needed == 'true'
+        run: |
+          bash scripts/transform-skills.sh \
+            /tmp/superpowers/skills \
+            skills/superpowers
+
+      - name: Update version file
+        if: steps.check.outputs.needed == 'true'
+        run: |
+          echo "${{ steps.latest.outputs.version }}" > .superpowers-version
+
+      - name: Create Pull Request
+        if: steps.check.outputs.needed == 'true'
+        uses: peter-evans/create-pull-request@v6
+        with:
+          title: "chore: sync superpowers v${{ steps.current.outputs.version }} → v${{ steps.latest.outputs.version }}"
+          body: |
+            ## superpowers スキル自動同期
+
+            **更新**: v${{ steps.current.outputs.version }} → v${{ steps.latest.outputs.version }}
+
+            [リリースノート](https://github.com/obra/superpowers/releases/tag/v${{ steps.latest.outputs.version }})を確認してください。
+          branch: chore/sync-superpowers
+          commit-message: "chore: sync superpowers skills to v${{ steps.latest.outputs.version }}"
