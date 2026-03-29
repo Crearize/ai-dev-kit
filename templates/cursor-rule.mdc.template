@@ -1,0 +1,8 @@
+---
+description: "{{DESCRIPTION}}"
+globs:
+{{GLOBS}}
+alwaysApply: {{ALWAYS_APPLY}}
+---
+
+{{CONTENT}}

@@ -1,0 +1,161 @@
+# {{PROJECT_NAME}} - Claude Code Development Guide
+
+This file is loaded by Claude Code at the start of each session.
+
+## Language Setting
+
+> **IMPORTANT**: Always respond in **Japanese** for this project.
+> This setting must persist even after context compaction.
+
+---
+
+## SuperPowers Operating Rules
+
+**SuperPowers Skills must be applied in every case.**
+
+### Basic Principles
+
+1. **Skill check at conversation start** - If a SuperPowers skill is even 1% applicable, invoke it via `Skill` tool
+2. **No skipping skills** - "It's simple" or "Let me read code first" are not valid reasons to skip
+3. **Process skills first** - When multiple skills apply: process skills (brainstorming, debugging) -> implementation skills
+
+### Required Skills
+
+| Scenario | Skill | Notes |
+|----------|-------|-------|
+| Before new feature/change | `superpowers:brainstorming` | Explore requirements and design first |
+| Multi-step implementation planning | `superpowers:writing-plans` | Write plan before touching code |
+| Plan execution | `superpowers:executing-plans` or `superpowers:subagent-driven-development` | Parallel execution for independent tasks |
+| Bug / test failure investigation | `superpowers:systematic-debugging` | Debug process before proposing fixes |
+| Testing implementation | `superpowers:test-driven-development` | TDD: test -> implementation order |
+| 2+ independent tasks | `superpowers:dispatching-parallel-agents` | Parallel agents for efficiency |
+| Receiving code review | `superpowers:receiving-code-review` | No blind agreement, technical verification required |
+| Before completion / merge | `superpowers:verification-before-completion` | Evidence-based completion verification |
+| Post-completion integration | `superpowers:finishing-a-development-branch` | Merge/PR/cleanup decisions |
+| Feature isolation needed | `superpowers:using-git-worktrees` | Worktree isolation |
+
+---
+
+## Quality Check Rules
+
+**All quality verification is done locally. CI is for build confirmation only.**
+
+### Flow
+
+```
+Change area detection (git diff)
+    |
+Static checks + tests
+    |
+Review cycles (persona + integrated review, minimum 3 cycles)
+    |
+E2E tests (final verification)
+    |
+Report data saved -> .quality-check-passed created -> push allowed
+```
+
+### Multi-Persona Review
+
+4 specialist personas review in parallel as Agents:
+
+| Persona | Focus Area |
+|---------|-----------|
+| Security Engineer | Vulnerabilities, auth, data leaks, injection |
+| Software Architect | SOLID/DRY, layer responsibilities, dependencies, extensibility |
+| QA Engineer | Edge cases, test coverage, error handling |
+| Integration Architecture | Overall consistency, layer dependencies, existing patterns, side effects |
+
+- **Completion criteria**: 0 must-fix items (Priority: High) from all 4 personas
+- Minimum 3 cycles, repeat until 0 must-fix items
+
+---
+
+## Critical Rules
+
+### Level 0: Auto-Execute (No confirmation needed)
+
+**AI automatically executes the following:**
+
+1. **Create GitHub Issue** - `gh issue create` to get Issue number
+2. **Create branch** - `git checkout -b [type]/[description]-[issue-number]`
+3. **Include Issue/branch/PR in plans** - Phase 0: Issue/branch creation, final Phase: PR creation
+4. **Always inline execution** - Execute plans inline (in current conversation), not subagent-driven
+5. **Run /quality-check before push** - All checks must pass before `git push`
+
+### Level 1: Must Follow
+
+1. **Branch check before work** - `git branch --show-current` to confirm not on main
+2. **No work on main** - Always create a new branch
+3. **Issue number required** - Branch name: `[type]/[description]-[issue-number]`
+4. **New error codes must be documented** - Add to error code list immediately
+
+### Level 2: Important
+
+- Follow coding conventions (see `documents/development/coding-rules/`)
+- Always implement tests
+- Document-driven development (spec -> implementation)
+
+### Level 3: Recommended
+
+- Performance optimization
+- Security measures
+- Accessibility
+
+---
+
+## Project Overview
+
+**{{PROJECT_NAME}}** - [Add project description here]
+
+### Tech Stack
+
+| Category | Technology |
+|----------|-----------|
+| Backend | [Add backend stack] |
+| Frontend | [Add frontend stack] |
+| Database | [Add database] |
+| Testing | [Add test frameworks] |
+
+### Development Server Ports
+
+| Server | Port | URL |
+|--------|------|-----|
+| Frontend | [PORT] | http://localhost:[PORT] |
+| Backend | [PORT] | http://localhost:[PORT] |
+
+---
+
+## Skills
+
+| Skill | Usage |
+|-------|-------|
+| `server-startup` | Server startup |
+| `branch-workflow` | Branch management |
+| `backend-development` | Backend implementation |
+| `frontend-development` | Frontend implementation |
+| `database-migration` | DB migration |
+| `quality-check` | Pre-push quality check |
+| `implementation-report` | PR report generation |
+| `browser-agent` | UI verification |
+
+## Common Commands
+
+### Backend
+```bash
+# Add your backend commands here
+```
+
+### Frontend
+```bash
+# Add your frontend commands here
+```
+
+## Reference Documents
+
+### Required (check before work)
+- **Development guidelines**: `documents/development/development-policy.md`
+- **Coding rules**: `documents/development/coding-rules/`
+
+### As Needed
+- **Error codes**: `documents/development/error-codes.md`
+- **Naming conventions**: `documents/development/naming-conventions.md`

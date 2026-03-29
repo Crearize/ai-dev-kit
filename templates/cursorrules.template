@@ -1,0 +1,59 @@
+# {{PROJECT_NAME}} - Cursor Development Rules
+
+This file defines project-specific rules for Cursor.
+
+## Critical Rules
+
+### Issue / Branch Creation (Auto-Execute Required)
+
+**AI must auto-execute at work start (no user confirmation needed):**
+
+1. **Create Issue first** - `gh issue create` to get Issue number
+2. **Create branch** - `git checkout -b [type]/[description]-[issue-number]`
+3. **No work on main** - Direct work on main is prohibited
+4. **Include in PR** - `closes #[issue-number]`
+
+## Phase Design Workflow
+
+### Phase 1: Requirements Analysis
+- Understand project structure
+- Check existing implementation
+- Review related API specs
+- Check `.cursor/rules/` rule files
+
+### Phase 2: Backend Implementation
+- Use centralized exception handling
+- No full package names (use import statements)
+
+### Phase 3: Frontend Implementation
+- Reference Phase 1, 2 results
+
+### Phase 4: Architecture Review
+- Design consistency, documentation consistency, DRY principle
+- Pass -> Phase 5 / Fail -> Fix in Phase 2/3
+
+### Phase 5: Quality Verification
+- Run backend quality checks
+- Run frontend linting, formatting, build
+
+### Phase 6: PR Creation
+- Commit message: `feat: [feature] (closes #[issue-number])`
+- PR body: implementation details, review results, test results
+
+## Reference Documents
+
+### Required (check before work)
+- Development guidelines: `documents/development/development-policy.md`
+- Coding rules: `documents/development/coding-rules/`
+
+### As Needed
+- Error codes: `documents/development/error-codes.md`
+- Naming conventions: `documents/development/naming-conventions.md`
+- Quick checklist: `documents/development/quick-checklist.md`
+
+## Development Server Ports
+
+| Server | Port | URL |
+|--------|------|-----|
+| Frontend | [PORT] | http://localhost:[PORT] |
+| Backend | [PORT] | http://localhost:[PORT] |
