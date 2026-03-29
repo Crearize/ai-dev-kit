@@ -1,0 +1,23 @@
+# [Stack Name] Coding Rules (Detailed)
+
+> **Tech Stack**: [STACK_NAME]
+
+## Overview
+
+<!-- Describe the coding rules scope -->
+
+## Conventions
+
+<!-- Add naming conventions, formatting rules, etc. -->
+
+## Architecture
+
+<!-- Add layer architecture, dependency rules, etc. -->
+
+## Testing
+
+<!-- Add testing conventions and coverage targets -->
+
+## Checklist
+
+<!-- Add a quick-reference checklist -->

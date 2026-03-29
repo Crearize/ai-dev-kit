@@ -1,0 +1,22 @@
+# [Stack Name] Review Guide
+
+**Note**: Review only when [stack-specific] files have been changed.
+
+## Required Reference Documents
+
+1. `documents/development/development-policy.md` - Development guidelines
+2. `documents/development/coding-rules/[stack]-rules.md` - Stack-specific coding rules
+
+---
+
+## Review Checklist
+
+### Category 1
+
+- [ ] Check item 1
+- [ ] Check item 2
+
+### Category 2
+
+- [ ] Check item 1
+- [ ] Check item 2
