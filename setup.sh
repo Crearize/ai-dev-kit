@@ -16,9 +16,9 @@ prompt_select() {
     local prompt="$1"
     shift
     local options=("$@")
-    echo "$prompt"
+    echo "$prompt" >&2
     for i in "${!options[@]}"; do
-        echo "  $((i+1))) ${options[$i]}"
+        echo "  $((i+1))) ${options[$i]}" >&2
     done
     while true; do
         read -rp "> " choice
@@ -26,7 +26,7 @@ prompt_select() {
             echo "$((choice-1))"
             return 0
         fi
-        echo "Enter a number between 1 and ${#options[@]}"
+        echo "Enter a number between 1 and ${#options[@]}" >&2
     done
 }
 
