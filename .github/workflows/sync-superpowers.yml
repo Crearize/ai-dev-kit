@@ -13,7 +13,7 @@ jobs:
   sync:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
       - name: Get current synced version
         id: current
@@ -63,7 +63,7 @@ jobs:
 
       - name: Create Pull Request
         if: steps.check.outputs.needed == 'true'
-        uses: peter-evans/create-pull-request@v6
+        uses: peter-evans/create-pull-request@v8
         with:
           title: "chore: sync superpowers v${{ steps.current.outputs.version }} → v${{ steps.latest.outputs.version }}"
           body: |
