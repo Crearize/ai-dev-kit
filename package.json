@@ -8,6 +8,7 @@
   "files": [
     "bin/",
     "lib/",
+    "!lib/*.test.js",
     "templates/",
     "skills/",
     "stacks/",
@@ -30,7 +31,18 @@
     "type": "git",
     "url": "https://github.com/Crearize/ai-dev-helm.git"
   },
+  "scripts": {
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:ci": "vitest run"
+  },
   "engines": {
-    "node": ">=18.0.0"
+    "node": ">=18.17.0"
+  },
+  "dependencies": {
+    "yargs": "^18.0.0"
+  },
+  "devDependencies": {
+    "vitest": "^4.1.3"
   }
 }
