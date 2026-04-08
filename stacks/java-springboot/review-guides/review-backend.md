@@ -80,6 +80,11 @@
 - [ ] Security filter chain properly configured
 - [ ] CORS settings appropriate
 - [ ] JWT verification properly implemented
+- [ ] IDOR vulnerability check (authorization verified for all resource access by ID)
+- [ ] Rate limiting considered for public-facing endpoints
+- [ ] CORS whitelist explicit (no wildcard `*` in production)
+- [ ] No sensitive data logged (passwords, tokens, PII)
+- [ ] Dependency vulnerability check considered (npm audit / OWASP dependency-check)
 
 ### 9. Testing
 
@@ -89,11 +94,18 @@
 - [ ] given-when-then pattern used
 - [ ] Mocking used appropriately (external dependencies only)
 
-### 10. API Design
+### 10. API Design & Performance
 
 - [ ] API documentation annotations appropriate
 - [ ] Request/Response DTOs properly defined
 - [ ] HTTP methods used correctly (GET/POST/PUT/DELETE)
+- [ ] API versioning strategy followed (api-design-rules.md)
+- [ ] Breaking changes avoided (or explicitly documented with versioning)
+- [ ] Response payload size appropriate (no unnecessary fields in list APIs)
+- [ ] Pagination implemented for all list endpoints
+- [ ] Query complexity appropriate (no unindexed full-table scans)
+- [ ] Batch operations used for bulk data processing
+- [ ] Connection pool settings appropriate for expected load
 
 ### 11. Static Analysis
 

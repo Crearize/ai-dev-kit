@@ -191,6 +191,49 @@ expect(screen.getByRole('dialog')).toBeInTheDocument();
 - `[ComponentName].test.tsx`
 - `[hookName].test.ts`
 
+## 9. Performance Rules
+
+### 9.1 Rendering Performance
+- **不要な再レンダリング防止**: `React.memo`、`useMemo`、`useCallback` を適切に使用（ただし過度な最適化は避ける）
+- **重い計算の遅延**: `useDeferredValue` / `useTransition` で重い処理のUIブロッキングを防止
+- **仮想化**: 大量リスト（100件以上）は `@tanstack/react-virtual` 等で仮想スクロールを検討
+- **Suspense境界**: データフェッチ箇所には適切にSuspense境界を配置し、部分的なローディングを実現
+
+### 9.2 Bundle Size
+- **Dynamic Import**: 初期表示に不要なコンポーネントは `next/dynamic` で遅延読み込み
+- **tree-shaking対応**: 名前付きインポート使用（`import { Button } from '@mui/material'` ではなく `import Button from '@mui/material/Button'`）
+- **画像最適化**: `next/image` を使用し、適切な `width`/`height`/`sizes` を指定
+- **フォント最適化**: `next/font` でフォントを最適化
+
+### 9.3 Data Fetching Performance
+- **staleTime設定**: TanStack React Queryの `staleTime` を適切に設定し、不要な再フェッチを防止
+- **プリフェッチ**: ユーザーの次のアクション（ページ遷移等）で必要なデータを `prefetchQuery` で先読み
+- **楽観的更新**: ユーザー操作のレスポンスを即座に反映し、バックグラウンドで同期
+
+## 10. Accessibility (a11y) Rules
+
+### 10.1 Semantic HTML
+- **適切なHTML要素を使用**: `<button>` for clickable actions, `<a>` for navigation, `<nav>`, `<main>`, `<section>`, `<article>`, `<aside>` 等
+- **見出し階層**: `h1` > `h2` > `h3` の順序を維持（レベルをスキップしない）
+- **ランドマーク**: ページに `<main>`, `<nav>`, `<header>`, `<footer>` を適切に配置
+
+### 10.2 Keyboard Navigation
+- **全てのインタラクティブ要素にキーボードでアクセス可能**: Tab, Enter, Escape, Arrow keys
+- **フォーカス表示**: `:focus-visible` スタイルを削除しない。カスタムする場合は視認性を確保
+- **モーダルのフォーカストラップ**: モーダル表示中はフォーカスがモーダル内に閉じ込められること
+- **スキップリンク**: 長いナビゲーションがある場合は「メインコンテンツへスキップ」リンクを検討
+
+### 10.3 ARIA
+- **セマンティックHTMLが第一選択**: ARIAは補助的手段。`<button>` に `role="button"` は不要
+- **必須ARIA属性**: `aria-label`（ラベルなしのアイコンボタン等）、`aria-expanded`（開閉UI）、`aria-live`（動的更新領域）
+- **フォームラベル**: 全ての入力フィールドに `<label htmlFor>` または `aria-label` を関連付け
+
+### 10.4 Visual Design
+- **色のコントラスト比**: WCAG 2.1 AA 準拠（通常テキスト 4.5:1、大テキスト 3:1）
+- **色だけに頼らない**: エラー表示等で色以外の手段（アイコン、テキスト）も併用
+- **テキストサイズ**: `rem` ベースで指定し、ブラウザのフォントサイズ設定を尊重
+- **画像の代替テキスト**: 意味のある画像には `alt` テキスト、装飾画像には `alt=""`
+
 ## Checklist
 
 - [ ] TypeScript strict mode - no errors
@@ -200,3 +243,11 @@ expect(screen.getByRole('dialog')).toBeInTheDocument();
 - [ ] React Hook Form + Zod for forms
 - [ ] async/await preferred, Promise.all for independent operations
 - [ ] Specification-based tests (user operations and results)
+- [ ] No unnecessary re-renders
+- [ ] Bundle size impact considered (dynamic import for heavy components)
+- [ ] Semantic HTML elements used appropriately
+- [ ] All interactive elements keyboard accessible
+- [ ] Form inputs have associated labels
+- [ ] Color contrast meets WCAG 2.1 AA
+- [ ] Images have appropriate alt text
+- [ ] Focus styles visible and not removed

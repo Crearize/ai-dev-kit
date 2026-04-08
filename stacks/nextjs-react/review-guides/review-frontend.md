@@ -69,11 +69,13 @@
 
 ### 7. Performance
 
-- [ ] No unnecessary re-renders
-- [ ] Bundle size impact considered
-- [ ] tree-shaking friendly code
+- [ ] No unnecessary re-renders (React DevTools Profiler verified if complex)
+- [ ] Bundle size impact considered (dynamic import for heavy components)
+- [ ] tree-shaking friendly imports
 - [ ] Unused code removed
 - [ ] Pagination or virtual scroll for large data sets
+- [ ] Images use next/image with proper sizing
+- [ ] staleTime/gcTime configured appropriately for queries
 
 ### 8. Security
 
@@ -103,3 +105,13 @@
 - [ ] Testing Library role-based selectors preferred (`getByRole` > `getByTestId`)
 - [ ] Mock targets limited to external dependencies (API, browser API)
 - [ ] Tests independent of execution order
+
+### 12. Accessibility
+
+- [ ] Semantic HTML elements used (nav, main, section, article, aside)
+- [ ] Interactive elements keyboard accessible (Tab/Enter/Escape)
+- [ ] ARIA attributes used where semantic HTML is insufficient
+- [ ] Color contrast ratio meets WCAG 2.1 AA (4.5:1 for text, 3:1 for large text)
+- [ ] Form inputs have associated labels (htmlFor or aria-label)
+- [ ] Focus management appropriate (modal focus trap, skip links if needed)
+- [ ] alt text provided for meaningful images (decorative images use alt="")

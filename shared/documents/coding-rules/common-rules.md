@@ -127,6 +127,19 @@ Closes #
 - SQL injection prevention (parameterized queries)
 - XSS prevention (output escaping)
 
+### OWASP Top 10 Awareness
+- **Injection**: 全ての外部入力にパラメタライズドクエリを使用。動的SQLの文字列結合は禁止
+- **Broken Authentication**: セッショントークンは十分なエントロピーで生成。パスワードはbcrypt/scryptでハッシュ化
+- **Sensitive Data Exposure**: APIレスポンスに不要な個人情報を含めない。ログにパスワード・トークン・個人情報を出力しない
+- **Broken Access Control**: 全てのエンドポイントで認証・認可チェックを実施。IDORに注意（他ユーザーのリソースにアクセスできないこと）
+- **Security Misconfiguration**: 本番環境でデバッグモード無効。不要なHTTPメソッド無効。適切なセキュリティヘッダー設定
+- **CSRF**: 状態変更リクエスト（POST/PUT/DELETE）にCSRF対策を実施（SPAの場合はSameSite Cookie + CORSで対応可）
+- **SSRF**: 外部URLを受け取る機能はホワイトリスト方式で制限
+
+### Dependency Security
+- 既知の脆弱性がある依存パッケージを使用しない
+- セキュリティアップデートは速やかに適用
+
 ## 5. Performance Rules
 
 ### Required
@@ -148,6 +161,10 @@ Closes #
 - [ ] Secrets managed via environment variables
 - [ ] Log output masked for sensitive data
 - [ ] Input validation implemented (server-side required)
+- [ ] No IDOR vulnerabilities (authorization checked for resource access)
+- [ ] CSRF protection implemented
+- [ ] Security headers configured (production)
+- [ ] No sensitive data in API responses beyond what's necessary
 
 ### Performance
 - [ ] No N+1 problems

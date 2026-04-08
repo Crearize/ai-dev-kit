@@ -101,6 +101,43 @@ Unified error response format:
 | `message` | String | Yes | Human-readable error message |
 | `details` | Object | No | Additional info (validation field details, etc.) |
 
+## 7. Backward Compatibility
+
+### Breaking Change の定義
+以下は breaking change であり、既存クライアントに影響する：
+- エンドポイントURLの変更・削除
+- HTTPメソッドの変更
+- 必須リクエストパラメータの追加
+- レスポンスフィールドの削除・型変更
+- ステータスコードの変更
+- エラーコードの変更
+
+### 非Breaking Change（安全な変更）
+- 新規エンドポイントの追加
+- オプショナルなリクエストパラメータの追加
+- レスポンスフィールドの追加
+- 新しいエラーコードの追加
+
+### バージョニング戦略
+- URLパスベースのバージョニング: `/api/v1/`, `/api/v2/`
+- breaking changeが必要な場合は新バージョンを作成
+- 旧バージョンは deprecation period を設けてから削除
+
+## 8. API Response Design
+
+### 成功レスポンスの一貫性
+- 単体取得: リソースオブジェクトを直接返す
+- リスト取得: ページネーション情報付きのラッパーオブジェクトで返す
+- 作成: 201 Created + 作成されたリソースを返す
+- 更新: 200 OK + 更新されたリソースを返す
+- 削除: 204 No Content（レスポンスボディなし）
+
+### レスポンスフィールド命名
+- camelCase を使用
+- boolean型は `is` / `has` プレフィックス: `isActive`, `hasPermission`
+- 日時は ISO 8601 形式（タイムゾーン付き）: `2025-01-08T10:00:00+09:00`
+- ID は文字列型（UUID）: `"id": "550e8400-e29b-41d4-a716-446655440000"`
+
 ## Checklist
 
 - [ ] Endpoints use lowercase + hyphen-case
@@ -109,3 +146,7 @@ Unified error response format:
 - [ ] HTTP methods appropriate
 - [ ] Pagination uses page/size/sort parameters
 - [ ] Error responses follow unified format
+- [ ] Breaking change がないことを確認（または新バージョンで対応）
+- [ ] 成功レスポンス形式がAPI設計ルールに準拠
+- [ ] レスポンスフィールド命名規則に準拠（camelCase, ISO 8601日時）
+- [ ] 新規エンドポイントにページネーション対応（リスト系）

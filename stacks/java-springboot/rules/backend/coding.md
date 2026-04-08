@@ -45,3 +45,17 @@ Delegate to the common exception handler. Only use try-catch for special cases (
 - Constructor injection (`@RequiredArgsConstructor`)
 - DRY principle - check existing utilities before writing new code
 - Specification-based testing (test functional requirements, not internal state)
+
+## Performance Requirements
+
+- No SELECT * (specify required columns only)
+- N+1 problem prevention (JOIN or batch fetch)
+- Pagination required for list endpoints
+- Index design for frequently queried columns
+
+## Security Requirements
+
+- All endpoints require authentication/authorization checks
+- IDOR prevention (verify resource access rights)
+- No sensitive data in logs (passwords, tokens, PII)
+- CORS whitelist explicit (no wildcard `*` in production)
