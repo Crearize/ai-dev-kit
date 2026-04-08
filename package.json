@@ -1,0 +1,36 @@
+{
+  "name": "@crearize/ai-dev-helm",
+  "version": "1.0.0",
+  "description": "AI coding tool (Claude Code, Cursor) development foundation setup CLI",
+  "bin": {
+    "ai-dev-helm": "./bin/cli.js"
+  },
+  "files": [
+    "bin/",
+    "lib/",
+    "templates/",
+    "skills/",
+    "stacks/",
+    "shared/",
+    "configs/",
+    "scripts/transform-skills.sh",
+    ".superpowers-version"
+  ],
+  "keywords": [
+    "claude-code",
+    "cursor",
+    "ai",
+    "development",
+    "scaffold",
+    "setup"
+  ],
+  "author": "Crearize",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Crearize/ai-dev-helm.git"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
