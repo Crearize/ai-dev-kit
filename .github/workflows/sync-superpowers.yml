@@ -27,7 +27,13 @@ jobs:
       - name: Get latest superpowers release
         id: latest
         run: |
-          LATEST=$(gh api repos/obra/superpowers/releases/latest --jq '.tag_name' | sed 's/^v//')
+          LATEST=$(gh api repos/obra/superpowers/releases \
+            --jq '[.[] | select(.prerelease == false and .draft == false)][0].tag_name' \
+            | sed 's/^v//')
+          if [ -z "$LATEST" ]; then
+            echo "::error::Failed to get latest release version"
+            exit 1
+          fi
           echo "version=$LATEST" >> "$GITHUB_OUTPUT"
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -46,8 +52,11 @@ jobs:
       - name: Clone superpowers
         if: steps.check.outputs.needed == 'true'
         run: |
-          git clone --depth 1 --branch "v${{ steps.latest.outputs.version }}" \
-            https://github.com/obra/superpowers.git /tmp/superpowers
+          if ! git clone --depth 1 --branch "v${{ steps.latest.outputs.version }}" \
+            https://github.com/obra/superpowers.git /tmp/superpowers; then
+            echo "::error::Failed to clone superpowers v${{ steps.latest.outputs.version }}"
+            exit 1
+          fi
 
       - name: Transform and copy skills
         if: steps.check.outputs.needed == 'true'
@@ -56,6 +65,16 @@ jobs:
             /tmp/superpowers/skills \
             skills/superpowers
 
+      - name: Verify transformed skills
+        if: steps.check.outputs.needed == 'true'
+        run: |
+          SKILL_COUNT=$(find skills/superpowers -name "SKILL.md" | wc -l)
+          if [ "$SKILL_COUNT" -eq 0 ]; then
+            echo "::error::No skills found after transformation"
+            exit 1
+          fi
+          echo "Verified: $SKILL_COUNT skills found"
+
       - name: Update version file
         if: steps.check.outputs.needed == 'true'
         run: |
@@ -63,7 +82,8 @@ jobs:
 
       - name: Create Pull Request
         if: steps.check.outputs.needed == 'true'
-        uses: peter-evans/create-pull-request@v8
+        id: create-pr
+        uses: peter-evans/create-pull-request@v7
         with:
           title: "chore: sync superpowers v${{ steps.current.outputs.version }} → v${{ steps.latest.outputs.version }}"
           body: |
@@ -74,3 +94,12 @@ jobs:
             [リリースノート](https://github.com/obra/superpowers/releases/tag/v${{ steps.latest.outputs.version }})を確認してください。
           branch: chore/sync-superpowers
           commit-message: "chore: sync superpowers skills to v${{ steps.latest.outputs.version }}"
+          labels: auto-merge-superpowers
+
+      - name: Enable auto-merge
+        if: steps.create-pr.outputs.pull-request-number
+        run: |
+          gh pr merge ${{ steps.create-pr.outputs.pull-request-number }} \
+            --auto --squash
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
