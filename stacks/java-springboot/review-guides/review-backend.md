@@ -84,7 +84,7 @@
 - [ ] Rate limiting considered for public-facing endpoints
 - [ ] CORS whitelist explicit (no wildcard `*` in production)
 - [ ] No sensitive data logged (passwords, tokens, PII)
-- [ ] Dependency vulnerability check considered (npm audit / OWASP dependency-check)
+- [ ] Dependency vulnerability check considered (OWASP dependency-check / Snyk / Gradle dependencyCheck)
 
 ### 9. Testing
 
