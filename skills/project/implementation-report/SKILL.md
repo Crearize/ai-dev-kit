@@ -40,6 +40,8 @@ Step 5: PR descriptionに実装レポートを含めてPR作成
 
 プロジェクトルートの `.quality-check-report.json` を読み取る。
 
+> フォーマットの詳細は [`_schemas/quality-check-report.schema.md`](../_schemas/quality-check-report.schema.md) を参照。
+
 **ファイルが存在しない場合**: エラーを出力し、先に `/quality-check` を実行するよう促して処理を中断する。
 
 ---

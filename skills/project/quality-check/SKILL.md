@@ -193,6 +193,8 @@ Agentツールで4つのサブエージェントを**同時に**起動する。
 
 各サイクルの結果を `.quality-check-report.json` に保存する。
 
+> 完全なスキーマ定義は [`_schemas/quality-check-report.schema.md`](../_schemas/quality-check-report.schema.md) を参照。
+
 JSONフォーマット例：
 
 ```json
