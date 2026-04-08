@@ -23,12 +23,14 @@ if command -v jq &>/dev/null; then
     jq -s '
       .[0] as $existing |
       .[1] as $new |
-      $existing * {
+      ($new | del(.permissions, .hooks)) as $new_toplevel |
+      ($existing | del(.permissions, .hooks)) as $existing_toplevel |
+      ($new_toplevel * $existing_toplevel) * {
         permissions: {
           allow: ($existing.permissions.allow // []),
           deny: (($existing.permissions.deny // []) + ($new.permissions.deny // []) | unique)
         }
-      }
+      } * (if $existing.hooks then { hooks: $existing.hooks } else {} end)
     ' "$TARGET" "$MERGE_SOURCE" > "${TARGET}.tmp"
     mv "${TARGET}.tmp" "$TARGET"
     echo "  Settings merged using jq"
@@ -44,6 +46,11 @@ with open('$TARGET') as f:
     existing = json.load(f)
 with open('$MERGE_SOURCE') as f:
     new = json.load(f)
+
+# Apply top-level settings from template as defaults (existing values take precedence)
+for key, value in new.items():
+    if key not in ('permissions', 'hooks'):
+        existing.setdefault(key, value)
 
 # Merge deny lists
 existing.setdefault('permissions', {})

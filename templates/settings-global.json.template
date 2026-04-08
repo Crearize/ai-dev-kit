@@ -1,4 +1,11 @@
 {
+  "model": "claude-opus-4-6",
+  "effortLevel": "high",
+  "env": {
+    "CLAUDE_CODE_EFFORT_LEVEL": "max"
+  },
+  "alwaysThinkingEnabled": true,
+  "showThinkingSummaries": true,
   "permissions": {
     "deny": [
       "Bash(rm -rf /)",
