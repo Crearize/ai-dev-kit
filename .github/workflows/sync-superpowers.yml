@@ -41,22 +41,27 @@ jobs:
       - name: Check if update needed
         id: check
         run: |
-          if [ "${{ steps.current.outputs.version }}" = "${{ steps.latest.outputs.version }}" ]; then
+          if [ "$CURRENT_VERSION" = "$LATEST_VERSION" ]; then
             echo "needed=false" >> "$GITHUB_OUTPUT"
-            echo "Already up to date: v${{ steps.current.outputs.version }}"
+            echo "Already up to date: v$CURRENT_VERSION"
           else
             echo "needed=true" >> "$GITHUB_OUTPUT"
-            echo "Update available: v${{ steps.current.outputs.version }} → v${{ steps.latest.outputs.version }}"
+            echo "Update available: v$CURRENT_VERSION → v$LATEST_VERSION"
           fi
+        env:
+          CURRENT_VERSION: ${{ steps.current.outputs.version }}
+          LATEST_VERSION: ${{ steps.latest.outputs.version }}
 
       - name: Clone superpowers
         if: steps.check.outputs.needed == 'true'
         run: |
-          if ! git clone --depth 1 --branch "v${{ steps.latest.outputs.version }}" \
+          if ! git clone --depth 1 --branch "v${LATEST_VERSION}" \
             https://github.com/obra/superpowers.git /tmp/superpowers; then
-            echo "::error::Failed to clone superpowers v${{ steps.latest.outputs.version }}"
+            echo "::error::Failed to clone superpowers v${LATEST_VERSION}"
             exit 1
           fi
+        env:
+          LATEST_VERSION: ${{ steps.latest.outputs.version }}
 
       - name: Transform and copy skills
         if: steps.check.outputs.needed == 'true'
@@ -78,7 +83,9 @@ jobs:
       - name: Update version file
         if: steps.check.outputs.needed == 'true'
         run: |
-          echo "${{ steps.latest.outputs.version }}" > .superpowers-version
+          echo "$LATEST_VERSION" > .superpowers-version
+        env:
+          LATEST_VERSION: ${{ steps.latest.outputs.version }}
 
       - name: Create Pull Request
         if: steps.check.outputs.needed == 'true'
@@ -99,7 +106,7 @@ jobs:
       - name: Enable auto-merge
         if: steps.create-pr.outputs.pull-request-number
         run: |
-          gh pr merge ${{ steps.create-pr.outputs.pull-request-number }} \
-            --auto --squash
+          gh pr merge "$PR_NUMBER" --auto --squash
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PR_NUMBER: ${{ steps.create-pr.outputs.pull-request-number }}

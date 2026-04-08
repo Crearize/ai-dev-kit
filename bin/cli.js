@@ -29,7 +29,7 @@ yargs(hideBin(process.argv))
       console.log('Project initialization mode');
       console.log('');
       const { doInit } = require('../lib/init');
-      await doInit({ dryRun: argv.dryRun, verbose: argv.verbose });
+      await doInit({ dryRun: argv.dryRun });
     }
   )
   .command(
@@ -46,7 +46,7 @@ yargs(hideBin(process.argv))
     async (argv) => {
       printHeader();
       const { doPersonal } = require('../lib/personal');
-      await doPersonal({ verbose: argv.verbose });
+      await doPersonal();
     }
   )
   .demandCommand(1, 'Please specify a command: init or personal')
@@ -69,3 +69,11 @@ yargs(hideBin(process.argv))
     process.exit(1);
   })
   .parse();
+
+process.on('unhandledRejection', (err) => {
+  console.error(`Error: ${err && err.message ? err.message : err}`);
+  if (process.argv.includes('--verbose')) {
+    console.error(err && err.stack ? err.stack : '');
+  }
+  process.exit(1);
+});

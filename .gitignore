@@ -14,3 +14,10 @@ node_modules/
 # Temp
 *.tmp
 *.bak
+
+# Superpowers plan/spec files (local-only, not committed)
+docs/superpowers/
+
+# Quality check artifacts
+.quality-check-report.json
+.quality-check-passed

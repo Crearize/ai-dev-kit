@@ -1,0 +1,9 @@
+# Test files
+*.test.js
+vitest.config.mjs
+
+# Development files
+docs/
+.github/
+.quality-check-report.json
+.quality-check-passed
