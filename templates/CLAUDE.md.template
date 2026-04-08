@@ -145,6 +145,8 @@ Report data saved -> .quality-check-passed created -> push allowed
 | `quality-check` | Pre-push quality check |
 | `implementation-report` | PR report generation |
 | `browser-agent` | UI verification |
+| `log-design` | Log design check (legal compliance) |
+| `generate-docs` | CHANGELOG / release notes generation |
 
 ## Common Commands
 
