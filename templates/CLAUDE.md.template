@@ -25,7 +25,7 @@ This file is loaded by Claude Code at the start of each session.
 |----------|-------|-------|
 | Before new feature/change | `superpowers:brainstorming` | Explore requirements and design first |
 | Multi-step implementation planning | `superpowers:writing-plans` | Write plan before touching code |
-| Plan execution | `superpowers:executing-plans` or `superpowers:subagent-driven-development` | Parallel execution for independent tasks |
+| Plan execution | `superpowers:executing-plans` | Always inline execution (see Plan Execution Rules below) |
 | Bug / test failure investigation | `superpowers:systematic-debugging` | Debug process before proposing fixes |
 | Testing implementation | `superpowers:test-driven-development` | TDD: test -> implementation order |
 | 2+ independent tasks | `superpowers:dispatching-parallel-agents` | Parallel agents for efficiency |
@@ -33,6 +33,12 @@ This file is loaded by Claude Code at the start of each session.
 | Before completion / merge | `superpowers:verification-before-completion` | Evidence-based completion verification |
 | Post-completion integration | `superpowers:finishing-a-development-branch` | Merge/PR/cleanup decisions |
 | Feature isolation needed | `superpowers:using-git-worktrees` | Worktree isolation |
+
+### Plan Execution Rules
+
+1. **Always inline execution** - Execute plans in the current conversation using `superpowers:executing-plans`. Do not use subagent-driven-development. No confirmation of execution method is needed.
+2. **Plan files are not committed** - Plan documents (`docs/superpowers/plans/*.md`) must NOT be committed or pushed to the repository.
+3. **Plan file lifecycle** - Plan files are kept locally during implementation. After the PR is merged, delete all plan files from the local workspace.
 
 ---
 
@@ -105,6 +111,8 @@ Report data saved -> .quality-check-passed created -> push allowed
 
 ## Project Overview
 
+<!-- Manual edit: Update the sections below to match your project -->
+
 **{{PROJECT_NAME}}** - [Add project description here]
 
 ### Tech Stack
@@ -139,6 +147,8 @@ Report data saved -> .quality-check-passed created -> push allowed
 | `browser-agent` | UI verification |
 
 ## Common Commands
+
+<!-- Manual edit: Add your project's common commands below -->
 
 ### Backend
 ```bash
