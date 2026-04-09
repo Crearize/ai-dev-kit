@@ -108,28 +108,57 @@ export async function POST(request: Request) {
 **ログに出力してはいけない情報:**
 - パスワード、トークン、APIキー
 - クレジットカード番号（PCI DSS）
-- マイナンバー
+- マイナンバー（個人番号）
 
 **マスキング実装例 (Java):**
 
 ```java
 public class PiiMasker {
     public static String maskEmail(String email) {
+        if (email == null) return "***";
         int atIndex = email.indexOf('@');
+        if (atIndex < 0) return "***"; // @がない場合は全マスク
         if (atIndex <= 1) return "***@" + email.substring(atIndex + 1);
         return email.charAt(0) + "***@" + email.substring(atIndex + 1);
     }
 
     public static String maskPhone(String phone) {
-        if (phone.length() < 4) return "****";
+        if (phone == null || phone.length() < 4) return "****";
         return "****" + phone.substring(phone.length() - 4);
     }
 
     public static String maskCardNumber(String cardNumber) {
+        if (cardNumber == null) return "****";
         String digits = cardNumber.replaceAll("[^0-9]", "");
         if (digits.length() < 4) return "****";
         return "****-****-****-" + digits.substring(digits.length() - 4);
     }
+
+    public static String maskMyNumber(String myNumber) {
+        // マイナンバーは12桁の数字。全桁マスクが原則（部分表示も不可）
+        if (myNumber == null) return "************";
+        return "************";
+    }
+}
+```
+
+### ログインジェクション防止
+
+ユーザー入力をログ出力する際、改行コード（CR/LF）を含む文字列がそのまま出力されると、偽のログ行が挿入される（ログインジェクション/ログフォージング）。監査ログの信頼性を損なうため、必ずサニタイズする。
+
+```java
+public static String sanitizeForLog(String input) {
+    if (input == null) return "";
+    return input.replaceAll("[\\r\\n]", " ");
+}
+
+// 使用例
+log.info("User search: query={}", sanitizeForLog(userInput));
+```
+
+```typescript
+function sanitizeForLog(input: string): string {
+  return input.replace(/[\r\n]/g, ' ');
 }
 ```
 

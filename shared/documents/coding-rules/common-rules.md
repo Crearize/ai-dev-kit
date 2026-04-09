@@ -127,18 +127,32 @@ Closes #
 - SQL injection prevention (parameterized queries)
 - XSS prevention (output escaping)
 
-### OWASP Top 10 Awareness
-- **Injection**: 全ての外部入力にパラメタライズドクエリを使用。動的SQLの文字列結合は禁止
-- **Broken Authentication**: セッショントークンは十分なエントロピーで生成。パスワードはbcrypt/scryptでハッシュ化
-- **Sensitive Data Exposure**: APIレスポンスに不要な個人情報を含めない。ログにパスワード・トークン・個人情報を出力しない
-- **Broken Access Control**: 全てのエンドポイントで認証・認可チェックを実施。IDORに注意（他ユーザーのリソースにアクセスできないこと）
-- **Security Misconfiguration**: 本番環境でデバッグモード無効。不要なHTTPメソッド無効。適切なセキュリティヘッダー設定
-- **CSRF**: 状態変更リクエスト（POST/PUT/DELETE）にCSRF対策を実施（SPAの場合はSameSite Cookie + CORSで対応可）
-- **SSRF**: 外部URLを受け取る機能はホワイトリスト方式で制限
+### OWASP Top 10 (2021) Awareness
+- **A01: Broken Access Control**: 全てのエンドポイントで認証・認可チェックを実施。IDORに注意（他ユーザーのリソースにアクセスできないこと）
+- **A02: Cryptographic Failures**: パスワードはbcrypt/scrypt/Argon2でハッシュ化。通信はTLS必須。機密データは保存時も暗号化を検討
+- **A03: Injection**: 全ての外部入力にパラメタライズドクエリを使用。動的SQLの文字列結合は禁止。ログ出力時もCR/LFをサニタイズ（ログインジェクション防止）
+- **A04: Insecure Design**: 脅威モデリングを意識した設計。ビジネスロジックの乱用防止（レートリミット、ワークフロー制御）。セキュリティ要件を設計段階で定義
+- **A05: Security Misconfiguration**: 本番環境でデバッグモード無効。不要なHTTPメソッド無効。適切なセキュリティヘッダー設定
+- **A06: Vulnerable and Outdated Components**: 既知の脆弱性がある依存パッケージを使用しない。セキュリティアップデートは速やかに適用
+- **A07: Identification and Authentication Failures**: セッショントークンは十分なエントロピーで生成。ブルートフォース対策（アカウントロックアウト、レートリミット）
+- **A08: Software and Data Integrity Failures**: 依存パッケージの整合性を検証（lockfileの一貫性維持）。CI/CDパイプラインの改ざん防止。デシリアライゼーション攻撃への対策
+- **A09: Security Logging and Monitoring Failures**: セキュリティイベント（ログイン失敗、認可拒否、入力バリデーション失敗）を確実にログ出力。監視・アラート体制の構築
+- **A10: SSRF (Server-Side Request Forgery)**: 外部URLを受け取る機能はホワイトリスト方式で制限。内部ネットワークへのリクエストをブロック
+
+### CSRF Protection
+- 状態変更リクエスト（POST/PUT/DELETE）にCSRF対策を実施
+- SPAの場合: `SameSite Cookie（Lax以上）` + CORS + `Content-Type: application/json` のみ受付（またはカスタムヘッダー `X-Requested-With` 検証）
+- `SameSite=Lax` のみでは不十分なケースがある（form-encoded POSTが通る）。必ずContent-Typeチェックまたはカスタムヘッダーを併用
+
+### API Response Security
+- APIレスポンスに不要な個人情報を含めない
+- ログにパスワード・トークン・個人情報を出力しない
 
 ### Dependency Security
 - 既知の脆弱性がある依存パッケージを使用しない
 - セキュリティアップデートは速やかに適用
+- lockfileをコミットし、CI/CDでの整合性を保証する
+- 新規依存パッケージ追加時はメンテナンス状況・ダウンロード数を確認（typosquatting注意）
 
 ## 5. Performance Rules
 

@@ -58,7 +58,7 @@ else
 fi
 ```
 
-コミットメッセージの type でカテゴリ分類する：
+コミットメッセージの type でカテゴリ分類する（Conventional Commits形式を前提とする。コミットメッセージ規約は `documents/development/coding-rules/common-rules.md` Section 1 を参照）：
 
 | Type | カテゴリ | CHANGELOG セクション |
 |------|---------|---------------------|
