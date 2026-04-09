@@ -196,6 +196,43 @@ void returnsStudentById() {
 
 Use `@RestControllerAdvice` for centralized exception handling with appropriate HTTP status codes and error response format.
 
+## 6. Performance Rules
+
+### 6.1 Query Performance
+- **EXPLAIN ANALYZE で実行計画を確認**: 複雑なクエリや大量データを扱うクエリは実行計画を確認すること
+- **インデックス設計**: WHERE句・JOIN条件・ORDER BY で頻繁に使用されるカラムにはインデックスを設定
+- **カバリングインデックス**: SELECT対象カラムもインデックスに含められる場合は検討
+- **LIKE検索**: 前方一致(`LIKE 'prefix%'`)のみインデックスが有効。中間一致・後方一致はフルスキャン
+
+### 6.2 JPA/jOOQ Performance
+- **Lazy Loading の罠**: N+1問題を防ぐため、関連エンティティはJOIN FETCHまたはバッチフェッチで取得
+- **ページネーション**: 全件取得禁止。大量データは必ずページネーション（OFFSET/LIMIT or キーセットページネーション）
+- **射影の活用**: 必要なカラムのみSELECT。DTOプロジェクションを活用
+- **バルク操作**: 大量INSERT/UPDATEはバッチ処理（`batchInsert`/`batchUpdate`）を使用
+
+### 6.3 Application Performance
+- **キャッシュ戦略**: 頻繁に読まれ、めったに変わらないデータには適切なキャッシュを検討
+- **接続プール**: HikariCP のデフォルト設定を理解し、必要に応じて調整
+- **非同期処理**: 長時間処理は `@Async` やメッセージキューで非同期化を検討
+- **レスポンスサイズ**: 不要なフィールドをレスポンスに含めない。リスト系APIは必要最小限のフィールドを返す
+
+## 7. Security Rules
+
+### 7.1 Authentication & Authorization
+- **Spring Security FilterChain**: 全エンドポイントに適切な認証・認可設定
+- **@PreAuthorize / @Secured**: メソッドレベルの認可が必要な場合に使用
+- **IDOR防止**: パスパラメータのIDに対して、リクエスト元ユーザーがアクセス権を持つか必ず検証
+
+### 7.2 Data Protection
+- **パスワード**: BCryptPasswordEncoder で必ずハッシュ化
+- **個人情報**: レスポンスDTOで必要最小限のフィールドのみ公開
+- **ログ**: パスワード、トークン、個人情報はログに出力しない（SLF4J MDC で制御）
+
+### 7.3 API Security
+- **Rate Limiting**: 公開APIにはレート制限を検討
+- **CORS**: 許可するオリジンを明示的に設定（`*` は禁止）
+- **CSP**: Content-Security-Policy ヘッダーを適切に設定
+
 ## Checklist
 
 - [ ] Google Java Style Guide compliance
@@ -208,3 +245,7 @@ Use `@RestControllerAdvice` for centralized exception handling with appropriate 
 - [ ] Specification-based tests
 - [ ] Branch coverage 75%+
 - [ ] No sensitive information in error messages
+- [ ] Query performance verified (indexes, no full-table scans)
+- [ ] Pagination for list endpoints
+- [ ] IDOR prevention (authorization check for resource access)
+- [ ] No sensitive data in logs

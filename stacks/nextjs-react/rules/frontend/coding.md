@@ -34,3 +34,11 @@ const Button = ({ ref, ...props }: Props & { ref?: React.Ref<HTMLButtonElement> 
 - **Export at definition**: `export const ComponentName = ...`
 - **Type safety**: Define TypeScript types appropriately
 - **UI library first**: Check existing UI library components before creating new ones
+
+## Accessibility Requirements
+
+- Semantic HTML elements preferred over `div` + ARIA roles
+- All interactive elements must be keyboard accessible
+- Form inputs must have associated labels (`htmlFor` or `aria-label`)
+- Icon-only buttons must have `aria-label`
+- Color contrast must meet WCAG 2.1 AA (4.5:1 text, 3:1 large text)
