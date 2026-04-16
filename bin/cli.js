@@ -41,12 +41,17 @@ yargs(hideBin(process.argv))
           type: 'boolean',
           describe: 'Show detailed output and stack traces on error',
           default: false,
+        })
+        .option('upgrade-model', {
+          type: 'boolean',
+          describe: 'Force-upgrade Claude model version from template (skip confirmation)',
+          default: false,
         });
     },
     async (argv) => {
       printHeader();
       const { doPersonal } = require('../lib/personal');
-      await doPersonal();
+      await doPersonal({ upgradeModel: argv.upgradeModel });
     }
   )
   .demandCommand(1, 'Please specify a command: init or personal')
