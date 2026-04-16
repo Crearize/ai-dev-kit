@@ -5,6 +5,19 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Added
+
+- `personal` コマンドに Claude モデルバージョン自動検出＆アップグレード機能
+  - 既存設定の `model` がテンプレートと異なる場合、対話プロンプトで確認
+  - `--upgrade-model` フラグで非対話アップグレード対応
+- `mergeSettings` に `upgradeKeys` オプション（指定キーをテンプレート値で強制上書き）
+
+### Changed
+
+- グローバル設定テンプレートのモデルを `claude-opus-4-6` → `claude-opus-4-7` に更新
+
 ## [1.0.0] - 2026-04-09
 
 ### Added
