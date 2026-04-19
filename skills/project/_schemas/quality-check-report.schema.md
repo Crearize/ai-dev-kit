@@ -10,6 +10,7 @@
 | `total_cycles` | `number` | 必須 | 完了したサイクル総数 |
 | `e2e_result` | `"pass" \| "fail" \| "skipped"` | 必須 | E2Eテスト結果 |
 | `e2e_issues` | `string[]` | 必須 | E2Eで検出された問題（なければ空配列） |
+| `documentation` | `Documentation` | 必須 | `feature-documentation` スキルの実行状況（Step 0） |
 
 ### Cycle オブジェクト
 
@@ -27,6 +28,13 @@
 | `description` | `string` | 必須 | 指摘内容の概要 |
 | `action` | `"対応済" \| "未対応" \| "対象外"` | 必須 | 対応状況 |
 | `detail` | `string` | 任意 | 対応の詳細説明 |
+
+### Documentation オブジェクト
+
+| フィールド | 型 | 必須 | 説明 |
+|-----------|-----|------|------|
+| `status` | `"updated" \| "not_required"` | 必須 | ドキュメント更新の状況。`updated`: 機能ドキュメントを新規作成または更新済み / `not_required`: 純粋な内部リファクタやバグ修正等で対象外と判定 |
+| `files` | `string[]` | 必須 | 新規作成または更新したドキュメントファイルのパス一覧（`status` が `not_required` の場合は空配列） |
 
 ## JSON 例
 
@@ -48,6 +56,10 @@
   ],
   "total_cycles": 4,
   "e2e_result": "pass",
-  "e2e_issues": []
+  "e2e_issues": [],
+  "documentation": {
+    "status": "updated",
+    "files": ["documents/features/user-authentication.md"]
+  }
 }
 ```

@@ -19,6 +19,9 @@ A quick-reference checklist for AI tools when working on development tasks.
 - [ ] Coding conventions followed
 - [ ] Tests implemented
 - [ ] Error codes added (if new)
+- [ ] **Feature documentation created or updated** (via /feature-documentation)
+  - When adding a new feature/service, requirement, prerequisite, or behavior change
+  - Existing doc -> update; no doc yet -> create under `documents/` or `docs/`
 
 ## Before Push (Required - via /quality-check)
 
@@ -44,5 +47,7 @@ A quick-reference checklist for AI tools when working on development tasks.
 
 ## Documentation Update Checks
 
+- [ ] **Feature/service added or changed -> Run /feature-documentation** (create or update)
+- [ ] **Project prerequisites/requirements changed -> Run /feature-documentation**
 - [ ] New error codes -> Add to error code list
 - [ ] DB design changes -> Reflect in related documents

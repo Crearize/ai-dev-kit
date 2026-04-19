@@ -239,6 +239,7 @@ Select options (space-separated): 1 2
 | **frontend-development** | フロントエンド開発 | フロントエンド実装時の規約・パターン |
 | **database-migration** | DB マイグレーション | マイグレーションファイルの作成手順 |
 | **browser-agent** | ブラウザテスト | UI 実装後のブラウザ上の動作検証 |
+| **feature-documentation** | 機能・知識ドキュメント化 | 機能/サービス/要件/前提条件を追加・変更したとき。新規ならドキュメント作成、既存があれば更新 |
 | **implementation-report** | 実装レポート | PR 作成時の実装レポート生成 |
 
 ### スキルの仕組み
