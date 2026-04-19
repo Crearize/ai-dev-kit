@@ -16,6 +16,8 @@ CIはビルド確認のみ。静的チェック・テスト・レビューは全
 ## 実行フロー
 
 ```
+Step 0: ドキュメント更新の確認（feature-documentation）
+  ↓
 Step 1: 変更領域の判定
   ↓
 Step 2: 静的チェック（該当領域）
@@ -36,6 +38,35 @@ Step 5.5: サーバー停止（E2Eテスト後に必須）
   ↓
 Step 6: レポートデータ保存 + フラグファイル作成 → push可能
 ```
+
+---
+
+## Step 0: ドキュメント更新の確認（feature-documentation）
+
+`quality-check` 本体に入る前に、機能ドキュメントが最新の変更を反映しているかを必ず確認する。
+
+### 判定ロジック
+
+```bash
+git diff --name-only origin/main...HEAD
+```
+
+得られた変更ファイル一覧から、以下の **いずれか** に該当するなら `feature-documentation` スキルが完了している必要がある：
+
+- 新規ファイルの追加（リネーム/移動を除く）が含まれる
+- 公開 API / 公開インターフェースのシグネチャ変更が含まれる
+- 設定ファイル / インフラ定義 / 依存関係の意味のある変更が含まれる
+- 振る舞い（仕様）の変更が含まれる
+
+### アクション
+
+| 状況 | アクション |
+|------|----------|
+| 上記いずれにも該当しない（純粋な内部リファクタ・バグ修正など） | `documentation.status = "not_required"` を `.quality-check-report.json` に記録して Step 1 へ進む |
+| 該当するが、関連ドキュメントの更新差分が `git diff` に含まれている | `documentation.status = "updated"` を記録して Step 1 へ進む |
+| 該当するが、ドキュメント更新差分が `git diff` に含まれていない | **エラー**: `feature-documentation` スキルを先に実行するようユーザーに促し、Step 1 に進まない |
+
+「ドキュメント更新差分」とは、`documents/` `docs/` 配下、または README 等のプロジェクトドキュメント `.md` ファイルへの変更を指す。判定に迷った場合はユーザーに確認する。
 
 ---
 
@@ -216,7 +247,11 @@ JSONフォーマット例：
   ],
   "total_cycles": 4,
   "e2e_result": "pass",
-  "e2e_issues": []
+  "e2e_issues": [],
+  "documentation": {
+    "status": "updated",
+    "files": ["documents/features/user-authentication.md"]
+  }
 }
 ```
 
@@ -262,6 +297,10 @@ touch .quality-check-passed
 ---
 
 ## チェックリスト
+
+### ドキュメント更新（Step 0）
+- [ ] `feature-documentation` スキルが完了している（または対象外と判定された）
+- [ ] 機能ドキュメントの更新差分が `git diff` に含まれている（対象の場合）
 
 ### 静的チェック + ユニットテスト
 - [ ] バックエンド: 静的チェック + テスト成功
