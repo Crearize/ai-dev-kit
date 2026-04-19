@@ -7,6 +7,25 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.2.0] - 2026-04-19
+
+### Added
+
+- `feature-documentation` スキル: 機能・サービス・要件・プロジェクト前提条件などを「永続ドキュメント」として蓄積する運用を必須化
+  - 新規ならドキュメント作成、既存があれば更新（全面書き換え禁止）
+  - 保存場所は既存ディレクトリを自動検索、なければユーザーに候補提示して確認
+  - 詳細テンプレート（概要 / 目的 / スコープ / アーキテクチャ / API / データモデル / 設計判断 / 運用上の注意）。変更履歴セクションは git で追跡可能なため除外
+- `quality-check` に Step 0「ドキュメント更新の確認」ゲートを追加
+  - 機能変更（新規ファイル / API 変更 / 振る舞いの変更）があるのにドキュメント更新差分が `git diff` に存在しない場合はエラーで停止し、`feature-documentation` を促す
+- `.quality-check-report.json` スキーマに `documentation` フィールドを追加（`status: "updated" | "not_required"`、対象ファイル一覧）
+
+### Changed
+
+- `shared/documents/quick-checklist.md` の「During Implementation」「Documentation Update Checks」に `feature-documentation` への参照を追加
+- `README.md` のスキル一覧表に `feature-documentation` を追加
+
+## [1.1.0] - 2026-04-09
+
 ### Added
 
 - `personal` コマンドに Claude モデルバージョン自動検出＆アップグレード機能
